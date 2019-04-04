@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Hazard Overview</title>
+  <style>
+    #map{
+      height:600px;
+      width:100%;
+      border: 5px solid #0077e2;
+      border-radius: 1.5rem;
+    }
+    body{
+      background: #384259;
+      color:#ff165d;
+      margin: 1rem 2rem;
+    }
+    h1{
+      margin: 1rem 2rem;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <h1><i>Hazard Overview</i></h1>
+  <div id="map"></div>
+  <script>
+  //let ws = new WebSocket('ws://192.168.31.239:3006/webportal');
+ let ws = new WebSocket('wss://salty-brushlands-62683.herokuapp.com/webportal');
+ // https://
+var markers2 = null;
+var center = null;
+var lines = null;
+
+ws.onmessage  = (data)  => {
+
+    // console.log(data.data);
+    dataReceived = JSON.parse(data.data);
+
+    if(dataReceived.action == 'getMarkers'){
+        markers2 = dataReceived.markers;
+    } else if (dataReceived.action == 'getCenter'){
+        center = dataReceived.center;
+    }else if (dataReceived.action == 'getLines'){
+        lines= dataReceived.lines;
+    }
+
+    // console.log('markers', markers2);
+    // console.log('center', center);
+    console.log('lines', lines);
+
+}
+
+ws.onopen  = ()=>{
+    let sendMarkers = {
+        action:"getMarkers"
+    };
+    ws.send(JSON.stringify(sendMarkers));
+    let sendCenter = {
+        action:"getCenter"
+    };
+    ws.send(JSON.stringify(sendCenter));
+    let sendLines = {
+        action:"getLines"
+    };
+    ws.send(JSON.stringify(sendLines));
+}
+
+
+
+    function initMap(){
+
+        setTimeout( ()=>{
+             // Map options
+      var options = {
+        zoom:18,
+        center:{lat:center.latitude,lng:center.longitude}
+      }
+
+
+      // New map
+      var map = new google.maps.Map(document.getElementById('map'), options);
+
+      var flightPlanCoordinates = [];
+      lines.map ( (line) =>{
+        let obj = {
+          lat:line.latitude,
+          lng:line.longitude
+        }
+        flightPlanCoordinates.push(obj);
+      } )
+        var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#00FF00',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        flightPath.setMap(map);
+
+
+      // Listen for click on map
+      google.maps.event.addListener(map, 'click', function(event){
+        // Add marker
+        addMarker(
+          {coords:event.latLng}
+          );
+      });
+
+
+
+      // Array of markers
+      // console.log('markers2 array vals:', markers2);
+      potholeImg = 'http://maps.google.com/mapfiles/kml/shapes/firedept.png';
+      speedBumpImg = 'http://maps.google.com/mapfiles/kml/shapes/campground.png';
+      thullaImg = 'http://maps.google.com/mapfiles/kml/shapes/police.png';
+     sosImg = 'http://maps.google.com/mapfiles/kml/shapes/webcam.png';
+      accidentOccuredImg = 'http://maps.google.com/mapfiles/kml/shapes/caution.png';
+      crimeImg = 'http://maps.google.com/mapfiles/kml/shapes/arts.png';
+      markers = []
+      markers2.map( (marker) =>{
+        // console.log("plotting ", marker.type);
+        let imgUrl = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        if(marker.type == 'pothole'){
+                imgUrl  = potholeImg
+        } else if(marker.type == 'speedbump'){
+            imgUrl  = speedBumpImg
+
+        }
+        else if(marker.type == 'police'){
+            imgUrl  = thullaImg
+
+        }
+        else if(marker.type == 'accident'){
+            imgUrl  = sosImg
+
+        }
+        else if(marker.type == 'sos'){
+            imgUrl  = accidentOccuredImg
+
+        }
+        else if(marker.type == 'crime'){
+            imgUrl  = crimeImg
+
+        }
+          let object ={
+            coords:{lat:marker.latitude,lng:marker.longitude},
+          iconImage:imgUrl,
+          content:'<h1>Lynn MA</h1>'
+          }
+          markers.push(object);
+      }
+
+      )
+
+
+      // Loop through markers
+      for(var i = 0;i < markers.length;i++){
+        // Add marker
+        addMarker(markers[i]);
+      }
+
+      // Add Marker Function
+      function addMarker(props){
+        var marker = new google.maps.Marker({
+          position:props.coords,
+          map:map,
+          //icon:props.iconImage
+        });
+
+        // Check for customicon
+        if(props.iconImage){
+          // Set icon image
+          marker.setIcon(props.iconImage);
+        }
+
+        // Check content
+        if(props.content){
+          var infoWindow = new google.maps.InfoWindow({
+            content:props.content
+          });
+
+          marker.addListener('click', function(){
+            infoWindow.open(map, marker);
+          });
+        }
+      }
+        },3000)
+
+
+        //plotting line
+
+
+    }
+    setInterval( ()=>{
+        initMap();
+        console.log("updae");
+    },5000)
+
+  </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDk1xOb_CJFiOqRjp7eTcXWEI-B2wWHzCk&callback=initMap">
+    </script>
+
+<!-- <script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiVMfJlKMfoMzOPu2J8eRFIUTV9KMX7fw&callback=initMap">
+</script> -->
+</body>
+</html>

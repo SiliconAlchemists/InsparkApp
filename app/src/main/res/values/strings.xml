@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Safe Beacon</string>
+    <string name="title_activity_nav">Map</string>
+    <string name="google_maps_key">AIzaSyDk1xOb_CJFiOqRjp7eTcXWEI-B2wWHzCk</string>
+</resources>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:orientation="vertical"
+    android:background="#384259"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:id="@+id/twoButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#df0054"
+            android:onClick="sendButtonCall"
+            android:tag="accident"
+            android:text="Accident Occurred"
+            android:padding="5dp"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:background="#6b76ff"
+            android:onClick="sendButtonCall"
+            android:tag="police"
+            android:padding="5dp"
+            android:text="Police Spotted" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/threeButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:background="#ff3796"
+            android:onClick="sendButtonCall"
+            android:tag="sos"
+            android:text="SOS" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#f69314"
+            android:onClick="sendButtonCall"
+            android:tag="crime"
+            android:padding="5dp"
+            android:text="Crime Risk" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#3a9679"
+            android:onClick="sendButtonCall"
+            android:tag="blind"
+            android:padding="5dp"
+            android:text="Blind Spot" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
